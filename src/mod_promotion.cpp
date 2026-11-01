@@ -480,6 +480,14 @@ public:
 
         ClearGossipMenuFor(player);
 
+        // FamWoW m22: promotion is an alt boost only; the account needs a level-80 character already
+        if (!CharacterDatabase.Query("SELECT 1 FROM characters WHERE account = {} AND level >= 80 LIMIT 1", accountID))
+        {
+            creature->Whisper("Promotions are for alts: reach level 80 on one of your characters first!", LANG_UNIVERSAL, player);
+            CloseGossipMenuFor(player);
+            return true;
+        }
+
         if (promotionEnable && ((int)pjts <= promotionCount))
         {
             if (action > GOSSIP_ACTION_INFO_DEF && action < 1020)
